@@ -1,0 +1,59 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-person-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 16px;
+      }
+    </style>
+
+	<div class = "card">
+      <div class="circle">{{number}}</div>
+      <h1>First Name: {{firstName}}</h1>
+	  <h1>Last Name: {{lastName}}</h1>
+	  <h1>Email Name: {{email}}</h1>
+	</div>
+  </template>
+
+  <script>
+    class PersonView extends Polymer.Element {
+      static get is() { return 'my-person-view'; }
+	  
+	  static get properties() {
+        return {
+		  number: {type: String},
+          firstName: {type: String},
+		  lastName: {type: String},
+		  email: {type:String},
+		  index: {type: String}
+        }
+      }
+	  
+	  ready() {
+		super.ready();
+		
+		this.index = PersonNamesHolder.getInstance().getDataLength() - 1;
+		this.number = PersonNamesHolder.getInstance().getDataLength();
+		this.firstName = PersonNamesHolder.getInstance().get(this.index).getFirstName();
+		this.lastName = PersonNamesHolder.getInstance().get(this.index).getLastName();
+		this.email = PersonNamesHolder.getInstance().get(this.index).getEmail();
+	  }
+    }
+
+    window.customElements.define(PersonView.is, PersonView);
+  </script>
+</dom-module>
