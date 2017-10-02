@@ -20,15 +20,26 @@ class PersonNamesHolder {
 		this._ironPageMenu = ironPageMenu;
 	}
 	
+	setRefresher(refresher, caller) {
+		this._refresher = refresher;
+		this._caller = caller;
+	}
+	
+	callRefresh() {
+		if(this._refresher != null && this._caller != null) {
+			this._refresher(this._caller);
+		}
+	}
+	
 	add(person) {
 		this._data.push(person);
+		
 		var buttonElement = document.createElement('a');
 		buttonElement.innerHTML = person.getLastName();
-		buttonElement.href = "person-view";
-		this._selectorMenu.appendChild(buttonElement);
 		
-		var viewElement = document.createElement('my-person-view');
-		this._ironPageMenu.appendChild(viewElement);
+		var index = PersonNamesHolder.getInstance().getDataLength() - 1;
+		buttonElement.href = "person-view?index=" +index;
+		this._selectorMenu.appendChild(buttonElement)
 	}
 	
 	get(index) {

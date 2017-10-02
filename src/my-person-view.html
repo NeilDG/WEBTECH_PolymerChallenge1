@@ -35,7 +35,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	  
 	  static get properties() {
         return {
-		  number: {type: String},
+		  number: {type: Object},
           firstName: {type: String},
 		  lastName: {type: String},
 		  email: {type:String},
@@ -46,11 +46,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	  ready() {
 		super.ready();
 		
-		this.index = PersonNamesHolder.getInstance().getDataLength() - 1;
-		this.number = PersonNamesHolder.getInstance().getDataLength();
+		var paramsURL = this.parseURL();
+		console.log(paramsURL.index);
+		
+		this.index = paramsURL.index;
+		this.number = paramsURL.index;
 		this.firstName = PersonNamesHolder.getInstance().get(this.index).getFirstName();
 		this.lastName = PersonNamesHolder.getInstance().get(this.index).getLastName();
 		this.email = PersonNamesHolder.getInstance().get(this.index).getEmail();
+		
+		PersonNamesHolder.getInstance().setRefresher(this.refresh, this);
+	  }
+	  
+	  refresh(caller) {
+		var paramsURL = caller.parseURL();
+		//console.log(paramsURL.index);
+		
+		if(paramsURL.index != null) {
+			this.index = paramsURL.index;
+			this.number = paramsURL.index;
+			this.firstName = PersonNamesHolder.getInstance().get(this.index).getFirstName();
+			this.lastName = PersonNamesHolder.getInstance().get(this.index).getLastName();
+			this.email = PersonNamesHolder.getInstance().get(this.index).getEmail();
+			
+			console.log("Index is: " +this.index+ " Last name is: " +this.lastName);
+			
+			caller.ready();
+		}
+	  }
+	  
+	  parseURL() {
+		  var regex = /[?&]([^=#]+)=([^&#]*)/g,
+			url = window.location.href,
+			params = {},
+			match;
+			while(match = regex.exec(url)) {
+				params[match[1]] = match[2];
+			}
+		return params;
 	  }
     }
 
